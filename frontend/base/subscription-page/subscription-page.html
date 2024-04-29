@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link rel="stylesheet" href="subscription-page.css">
+    <link flex href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+</head>
+<body>
+  <div class="subscription-selector">
+    <select id="subscription-select" class="subscription-select">
+        <option class="subscription-item" value="Basic">Basic</option>
+        <option class="subscription-item" value="Premium">Premium</option>
+        <option class="subscription-item" value="Enterprise">Enterprise</option>
+    </select>
+    <div class="subscription-info">
+        <h2>Subscription Details</h2>
+        <p><strong>Name:</strong> <span id="subscription-name"></span></p>
+        <p><strong>Access:</strong> <span id="subscription-access"></span></p>
+        <p><strong>Price:</strong> <span id="subscription-price"></span></p>
+        <p><strong>Duration:</strong> <span id="subscription-time"></span></p>
+
+        <div class="buy-button-case">
+          <button class="buy-button" data-subscription="Basic">Buy <span id="subscription-buy"></span></button>
+        </div>
+    </div>
+</div>
+    <div>
+        <nav class="sidebar locked">
+      <div class="logo_items flex">
+        <span class="nav_image">
+          <img src="../images/logo.jpg" alt="logo_img" />
+        </span>
+        <span class="logo_name">Course.io</span>
+        <i class="bx bx-lock-alt" id="lock-icon" title="Unlock Sidebar"></i>
+        <i class="bx bx-x" id="sidebar-close"></i>
+      </div>
+
+      <div class="menu_container">
+        <div class="menu_items">
+          <ul class="menu_item">
+            <div class="menu_title flex">
+              <span class="title">Dashboard</span>
+              <span class="line"></span>
+            </div>
+            <li class="item">
+              <a href="..\main.html" class="link flex">
+                <i class="bx bx-home-alt"></i>
+                <span>Main</span>
+              </a>
+            </li>
+            <li class="item">
+              <a href="..\course\course.html" class="link flex">
+                <i class="bx bx-grid-alt"></i>
+                <span>All Courses</span>
+              </a>
+            </li>
+          </ul>
+
+          <ul class="menu_item">
+            <div class="menu_title flex">
+              <span class="title">Editor</span>
+              <span class="line"></span>
+            </div>
+            <li class="item">
+              <a href="..\subscription-page\subscription-page.html" class="link flex">
+                <i class="bx bxs-magic-wand"></i>
+                <span>Subscription</span>
+              </a>
+            </li>
+            <li class="item">
+              <a href="..\history-page\history-page.html" class="link flex">
+                <i class="bx bx-folder"></i>
+                <span>History</span>
+              </a>
+            </li>
+            <li class="item">
+              <a href="..\admin-panel-page\admin-panel-page.html" class="link flex" id="admin-panel-link">
+                <i class="bx bx-cloud-upload"></i>
+                    <span>Admin Panel</span>
+                </a>
+            </li>
+          </ul>
+
+          <ul class="menu_item">
+            <div class="menu_title flex">
+              <span class="title">Setting</span>
+              <span class="line"></span>
+            </div>
+            <li class="item">
+              <a href="#" class="link flex">
+                <i class="bx bx-flag"></i>
+                <span>Notice Board</span>
+              </a>
+            <li class="item">
+                <a href="..\profile\profile.html" class="link flex">
+                  <i class="bx bx-cog"></i>
+                  <span>Setting</span>
+                </a>
+            </li>              
+          </ul>
+        </div>
+
+        <div class="sidebar_profile flex" id="user-info">
+            <span class="nav_image">
+                <img src="../../materials/user_pic2.png" alt="User Icon" id="userIcon">
+            </span>
+          <div class="data_text" style="color:black">
+            <div id="username"></div>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <script src="subscription-page.js"></script>
+</body>
+</html>
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Subscriptions</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <h1>Choose a Subscription Plan</h1>
+  <div class="subscription-container">
+    <div class="subscription">
+      <h2>Basic</h2>
+      <p>Subscription Access: Limited</p>
+      <p>Price: $5.99/month</p>
+      <p>Duration: 1 month</p>
+      <button class="buy-btn">Buy</button>
+    </div>
+    <div class="subscription">
+      <h2>Premium</h2>
+      <p>Subscription Access: Full</p>
+      <p>Price: $9.99/month</p>
+      <p>Duration: 1 month</p>
+      <button class="buy-btn">Buy</button>
+    </div>
+    <div class="subscription">
+      <h2>Enterprise</h2>
+      <p>Subscription Access: Special</p>
+      <p>Price: $19.99/3 months</p>
+      <p>Duration: 3 months</p>
+      <button class="buy-btn">Buy</button>
+    </div>
+  </div>
+
+  <div class="confirmation-modal hidden">
+    <h2>Confirm Subscription</h2>
+    <p>Are you sure you want to subscribe to this plan?</p>
+    <div class="btn-container">
+      <button class="confirm-btn">Yes</button>
+      <button class="cancel-btn">No</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Subscriptions</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <h1>Choose a Subscription Plan</h1>
+  <div class="subscription-container">
+    <div class="subscription">
+      <h2>Basic</h2>
+      <p>Subscription Access: Limited</p>
+      <p>Price: $5.99/month</p>
+      <p>Duration: 1 month</p>
+      <button class="buy-btn">Buy</button>
+    </div>
+    <div class="subscription">
+      <h2>Premium</h2>
+      <p>Subscription Access: Full</p>
+      <p>Price: $9.99/month</p>
+      <p>Duration: 1 month</p>
+      <button class="buy-btn">Buy</button>
+    </div>
+    <div class="subscription">
+      <h2>Enterprise</h2>
+      <p>Subscription Access: Special</p>
+      <p>Price: $19.99/3 months</p>
+      <p>Duration: 3 months</p>
+      <button class="buy-btn">Buy</button>
+    </div>
+  </div>
+
+  <div class="confirmation-modal hidden">
+    <h2>Confirm Subscription</h2>
+    <p>Are you sure you want to subscribe to this plan?</p>
+    <div class="btn-container">
+      <button class="confirm-btn">Yes</button>
+      <button class="cancel-btn">No</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html> -->
