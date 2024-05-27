@@ -1,6 +1,7 @@
 const express = require('express');
 const session = require('express-session');
 const cors = require('cors');
+const path = require('path');
 const cookieParser = require('cookie-parser');
 const userRoutes = require('./use/enter/userRoutes');
 const authRoutes = require('./use/enter/authRoutes');
@@ -15,6 +16,11 @@ const videoFromDataBase = require('./use/videos/videoFromDb.js');
 const videoAddToDataBase = require('./use/videos/videoAddToDb.js');
 const videoDeleteFromDataBase = require('./use/videos/videoDeleteFromDb.js');
 const videoEditInDataBase = require('./use/videos/videoEditInDb.js');
+const coursesRouter = require('./use/courses/coursesRouter.js'); // Добавьте путь к маршрутизатору курсов
+const historyRoutes = require('./use/history/historyRouter.js');
+const casesRouter = require('./use/cases/casesRouter.js'); // Маршрутизатор кейсов
+
+
 
 const app = express();
 const port = 3000;
@@ -43,7 +49,10 @@ app.use('/videos', videoFromDataBase); // запрос существующих 
 app.use('/videos/add', videoAddToDataBase); // запрос га добавление видео в бд 
 app.use('/videos/delete', videoDeleteFromDataBase); // запрос на удаление видео из бд 
 app.use('/videos/edit', videoEditInDataBase); // запрос на удаление видео из бд 
-
+app.use('/courses', coursesRouter); // запросы курсов
+app.use('/history', historyRoutes);
+app.use('/cases', casesRouter); // запросы кейсов
+app.use('/videos', express.static(path.join(__dirname, 'videos')));
 
 app.listen(port, () => {
     console.log(`Сервер запущен на порту ${port}`);

@@ -7,8 +7,7 @@
     <link rel="stylesheet" href="admin-panel-page.css">
     <link flex href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
 </head>
-<body>  
-
+<body>
     <!-- Блок редактирования категорий -->
     <div class="edit-block">
         <h2>Edit Categories</h2>
@@ -22,143 +21,183 @@
         </table>
     </div>
 
-  <!-- тут будет блок с редактированием курсов (создание/удаление) -->
-
-  <div class="edit-block">
-    <h2>Edit Videos</h2>
-    <div class="input-group">
-      <input type="text" id="video-name-input" placeholder="Enter video name">
-      <input type="text" id="video-description-input" placeholder="Enter video description">
-      <input type="text" id="video-material-input" placeholder="Enter video material (link)">
-      <input type="text" id="video-num-input" placeholder="Enter video number">
-      <button id="add-video-btn">Add Video</button>
-  </div>  
-    <table id="video-table">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Time</th>
-                <th>Number</th>
-                <th>Material</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Здесь будут отображаться существующие видео -->
-        </tbody>
-    </table>
-</div>
-<!-- блок редактирования видео  -->
-
-<!-- Edit Video Modal -->
-<div id="edit-video-modal" class="modal-video-edit" style="display: none">
-  <div class="modal-content-video-edit">
-      <span class="close-video-edit" onclick="closeEditPopup()">&times;</span>
-      <h2>Edit Video</h2>
-      <div class="input-group">
-          <input type="text" id="edit-video-name-input" placeholder="Video Name">
-          <input type="text" id="edit-video-description-input" placeholder="Video Description">
-          <input type="text" id="edit-video-time-input" placeholder="Video Time">
-          <input type="text" id="edit-video-material-input" placeholder="Video Material">
-          <input type="text" id="edit-video-num-input" placeholder="Video Number">
-          <button id="save-edit-btn">Save</button>
-      </div>
-  </div>
-</div>
-
-
-  <!-- тут будет блок с редактированием видео (создание/удаление) -->
-
-
-
-
-    <div>
-        <nav class="sidebar locked">
-      <div class="logo_items flex">
-        <span class="nav_image">
-          <img src="../images/logo.jpg" alt="logo_img" />
-        </span>
-        <span class="logo_name">Course.io</span>
-        <i class="bx bx-lock-alt" id="lock-icon" title="Unlock Sidebar"></i>
-        <i class="bx bx-x" id="sidebar-close"></i>
-      </div>
-
-      <div class="menu_container">
-        <div class="menu_items">
-          <ul class="menu_item">
-            <div class="menu_title flex">
-              <span class="title">Dashboard</span>
-              <span class="line"></span>
-            </div>
-            <li class="item">
-              <a href="..\main.html" class="link flex">
-                <i class="bx bx-home-alt"></i>
-                <span>Main</span>
-              </a>
-            </li>
-            <li class="item">
-              <a href="..\course\course.html" class="link flex">
-                <i class="bx bx-grid-alt"></i>
-                <span>All Courses</span>
-              </a>
-            </li>
-          </ul>
-
-          <ul class="menu_item">
-            <div class="menu_title flex">
-              <span class="title">Editor</span>
-              <span class="line"></span>
-            </div>
-            <li class="item">
-              <a href="..\subscription-page\subscription-page.html" class="link flex">
-                <i class="bx bxs-magic-wand"></i>
-                <span>Subscription</span>
-              </a>
-            </li>
-            <li class="item">
-              <a href="..\history-page\history-page.html" class="link flex">
-                <i class="bx bx-folder"></i>
-                <span>History</span>
-              </a>
-            </li>
-            <li class="item">
-              <a href="..\admin-panel-page\admin-panel-page.html" class="link flex" id="admin-panel-link">
-                  <i class="bx bx-cloud-upload"></i>
-                  <span>Admin Panel</span>
-              </a>
-          </li>
-          </ul>
-
-          <ul class="menu_item">
-            <div class="menu_title flex">
-              <span class="title">Setting</span>
-              <span class="line"></span>
-            </div>
-            <li class="item">
-              <a href="#" class="link flex">
-                <i class="bx bx-flag"></i>
-                <span>Notice Board</span>
-              </a>
-            <li class="item">
-                <a href="..\profile\profile.html" class="link flex">
-                  <i class="bx bx-cog"></i>
-                  <span>Setting</span>
-                </a>
-            </li>              
-          </ul>
+    <!-- Блок редактирования видео -->
+    <div class="edit-block">
+        <h2>Edit Videos</h2>
+        <div class="input-group">
+            <input type="text" id="video-name-input" placeholder="Enter video name">
+            <input type="text" id="video-description-input" placeholder="Enter video description">
+            <input type="text" id="video-material-input" placeholder="Enter video material (link)">
+            <input type="text" id="video-num-input" placeholder="Enter video number">
+            <button id="add-video-btn">Add Video</button>
         </div>
+        <table id="video-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Time</th>
+                    <th>Number</th>
+                    <th>Material</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Здесь будут отображаться существующие видео -->
+            </tbody>
+        </table>
+    </div>
 
-        <div class="sidebar_profile flex" id="user-info">
+    <!-- Edit Video Modal -->
+    <div id="edit-video-modal" class="modal-video-edit" style="display: none">
+        <div class="modal-content-video-edit">
+            <span class="close-video-edit" onclick="closeEditPopup()">&times;</span>
+            <h2>Edit Video</h2>
+            <div class="input-group">
+                <input type="text" id="edit-video-name-input" placeholder="Video Name">
+                <input type="text" id="edit-video-description-input" placeholder="Video Description">
+                <input type="text" id="edit-video-time-input" placeholder="Video Time">
+                <input type="text" id="edit-video-material-input" placeholder="Video Material">
+                <input type="text" id="edit-video-num-input" placeholder="Video Number">
+                <button id="save-edit-btn">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Блок добавления курсов -->
+    <div class="edit-block">
+        <h2>Add Course</h2>
+        <div class="input-group">
+            <input type="text" id="course-name-input" placeholder="Enter course name">
+            <input type="text" id="course-description-input" placeholder="Enter course description">
+            <input type="text" id="course-category-id-input" placeholder="Enter category ID">
+            <input type="date" id="course-release-date-input" placeholder="Enter release date">
+            <input type="text" id="course-pic-input" placeholder="Enter course picture URL">
+            <input type="text" id="course-subscription-access-input" placeholder="Enter subscription access">
+            <button id="add-course-btn">Add Course</button>
+        </div>
+        <table id="course-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Category ID</th>
+                    <th>Release Date</th>
+                    <th>Picture</th>
+                    <th>Subscription Access</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Здесь будут отображаться существующие курсы -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Блок добавления кейсов -->
+    <div class="edit-block">
+        <h2>Add Case</h2>
+        <div class="input-group">
+            <input type="text" id="case-video-num-input" placeholder="Enter video number">
+            <input type="text" id="case-course-id-input" placeholder="Enter course ID">
+            <button id="add-case-btn">Add Case</button>
+        </div>
+        <table id="case-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Video Number</th>
+                    <th>Course ID</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Здесь будут отображаться существующие кейсы -->
+            </tbody>
+        </table>
+    </div>
+
+    <nav class="sidebar locked">
+        <div class="logo_items flex">
             <span class="nav_image">
-                <img src="../../materials/user_pic2.png" alt="User Icon" id="userIcon">
+                <img src="../images/logo.jpg" alt="logo_img" />
             </span>
-          <div class="data_text" style="color:black">
-            <div id="username"></div>
-          </div>
+            <span class="logo_name">Course.io</span>
+            <i class="bx bx-lock-alt" id="lock-icon" title="Unlock Sidebar"></i>
+            <i class="bx bx-x" id="sidebar-close"></i>
         </div>
-      </div>
+
+        <div class="menu_container">
+            <div class="menu_items">
+                <ul class="menu_item">
+                    <div class="menu_title flex">
+                        <span class="title">Dashboard</span>
+                        <span class="line"></span>
+                    </div>
+                    <li class="item">
+                        <a href="..\main.html" class="link flex">
+                            <i class="bx bx-home-alt"></i>
+                            <span>Main</span>
+                        </a>
+                    </li>
+                    <li class="item">
+                        <a href="..\course\course.html" class="link flex">
+                            <i class="bx bx-grid-alt"></i>
+                            <span>All Courses</span>
+                        </a>
+                    </li>
+                </ul>
+
+                <ul class="menu_item">
+                    <div class="menu_title flex">
+                        <span class="title">Editor</span>
+                        <span class="line"></span>
+                    </div>
+                    <li class="item">
+                        <a href="..\subscription-page\subscription-page.html" class="link flex">
+                            <i class="bx bxs-magic-wand"></i>
+                            <span>Subscription</span>
+                        </a>
+                    </li>
+                    <li class="item">
+                        <a href="..\history-page\history-page.html" class="link flex">
+                            <i class="bx bx-folder"></i>
+                            <span>History</span>
+                        </a>
+                    </li>
+                    <li class="item">
+                        <a href="..\admin-panel-page\admin-panel-page.html" class="link flex" id="admin-panel-link">
+                            <i class="bx bx-cloud-upload"></i>
+                            <span>Admin Panel</span>
+                        </a>
+                    </li>
+                </ul>
+
+                <ul class="menu_item">
+                    <div class="menu_title flex">
+                        <span class="title">Setting</span>
+                        <span class="line"></span>
+                    </div>
+                    <li class="item">
+                      <a href="../profile/profile.html" class="link flex">
+                        <i class="bx bx-cog"></i>
+                        <span>Profile</span>
+                      </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="sidebar_profile flex" id="user-info">
+                <span class="nav_image">
+                    <img src="../../materials/user_pic2.png" alt="User Icon" id="userIcon">
+                </span>
+                <div class="data_text" style="color:black">
+                    <div id="username"></div>
+                </div>
+            </div>
+        </div>
     </nav>
     <script src="admin-panel-page.js"></script>
 </body>

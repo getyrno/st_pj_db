@@ -1,0 +1,95 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.course-details-container {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  width: 80%;
+  max-width: 800px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.back-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.back-button:hover {
+  background-color: #0056b3;
+}
+
+.course-details {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.course-image {
+  width: 250px;
+  height: 150px;
+  margin-right: 20px;
+  border-radius: 8px;
+}
+
+.course-info {
+  margin-top: 20px;
+}
+
+.course-info p {
+  margin: 5px 0;
+}
+
+.video-section {
+  display: flex;
+  margin-top: 20px;
+}
+
+.video-player {
+  flex: 2;
+}
+
+.video-list {
+  flex: 1;
+  margin-left: 20px;
+}
+
+.video-item {
+  margin-bottom: 10px;
+}
+
+.video-item h3 {
+  font-size: 18px;
+  margin: 0;
+}
+
+.video-item p {
+  margin: 5px 0;
+}
+
+.video-item a {
+  text-decoration: none;
+  color: #007bff;
+}
+
+.video-item a:hover {
+  text-decoration: underline;
+}

@@ -1,438 +1,409 @@
+document.addEventListener('DOMContentLoaded', async () => {
+    const sessionToken = sessionStorage.getItem('sessionToken');
+    console.log('sessionToken =>', sessionToken);
 
-// Selecting the sidebar and buttons
-const sidebar = document.querySelector(".sidebar");
-const sidebarOpenBtn = document.querySelector("#sidebar-open");
-const sidebarCloseBtn = document.querySelector("#sidebar-close");
-const sidebarLockBtn = document.querySelector("#lock-icon");
+    setupSidebar();
+    setupUserInfo();
+    setupCategoryManagement();
+    setupVideoManagement();
+    setupCourseManagement();
+    setupCaseManagement();
+});
 
-// Function to toggle the lock state of the sidebar
-const toggleLock = () => {
-  sidebar.classList.toggle("locked");
-  // If the sidebar is not locked
-  if (!sidebar.classList.contains("locked")) {
-    sidebar.classList.add("hoverable");
-    sidebarLockBtn.classList.replace("bx-lock-alt", "bx-lock-open-alt");
-  } else {
-    sidebar.classList.remove("hoverable");
-    sidebarLockBtn.classList.replace("bx-lock-open-alt", "bx-lock-alt");
-  }
-};
+function setupSidebar() {
+    const sidebar = document.querySelector(".sidebar");
+    const sidebarLockBtn = document.querySelector("#lock-icon");
+    const sidebarCloseBtn = document.querySelector("#sidebar-close");
 
-// Function to hide the sidebar when the mouse leaves
-const hideSidebar = () => {
-  if (sidebar.classList.contains("hoverable")) {
-    sidebar.classList.add("close");
-  }
-};
+    const toggleLock = () => {
+        sidebar.classList.toggle("locked");
+        if (!sidebar.classList.contains("locked")) {
+            sidebar.classList.add("hoverable");
+            sidebarLockBtn.classList.replace("bx-lock-alt", "bx-lock-open-alt");
+        } else {
+            sidebar.classList.remove("hoverable");
+            sidebarLockBtn.classList.replace("bx-lock-open-alt", "bx-lock-alt");
+        }
+    };
 
-// Function to show the sidebar when the mouse enter
-const showSidebar = () => {
-  if (sidebar.classList.contains("hoverable")) {
-    sidebar.classList.remove("close");
-  }
-};
+    const hideSidebar = () => {
+        if (sidebar.classList.contains("hoverable")) {
+            sidebar.classList.add("close");
+        }
+    };
 
-// Function to show and hide the sidebar
-const toggleSidebar = () => {
-  sidebar.classList.toggle("close");
-};
+    const showSidebar = () => {
+        if (sidebar.classList.contains("hoverable")) {
+            sidebar.classList.remove("close");
+        }
+    };
 
-// If the window width is less than 800px, close the sidebar and remove hoverability and lock
-if (window.innerWidth < 800) {
-  sidebar.classList.add("close");
-  sidebar.classList.remove("locked");
-  sidebar.classList.remove("hoverable");
+    const toggleSidebar = () => {
+        sidebar.classList.toggle("close");
+    };
+
+    if (window.innerWidth < 800) {
+        sidebar.classList.add("close");
+        sidebar.classList.remove("locked");
+        sidebar.classList.remove("hoverable");
+    }
+
+    sidebarLockBtn.addEventListener("click", toggleLock);
+    sidebar.addEventListener("mouseleave", hideSidebar);
+    sidebar.addEventListener("mouseenter", showSidebar);
+    sidebarCloseBtn.addEventListener("click", toggleSidebar);
 }
 
-// Adding event listeners to buttons and sidebar for the corresponding actions
-sidebarLockBtn.addEventListener("click", toggleLock);
-sidebar.addEventListener("mouseleave", hideSidebar);
-sidebar.addEventListener("mouseenter", showSidebar);
-sidebarCloseBtn.addEventListener("click", toggleSidebar);
-
-
-document.addEventListener('DOMContentLoaded', async function() {
-  // Проверяем наличие сеансового токена в sessionStorage
-  const sessionToken = sessionStorage.getItem('sessionToken');
-  console.log('sessionToken =>', sessionToken)
-  if (sessionToken) {
-      // Отправляем запрос на сервер для проверки валидности сеансового токена
-      try {
-          const response = await fetch('http://127.0.0.1:3000/aunt', {
-              headers: {
-                  'Authorization': `Bearer ${sessionToken}`
-              }
-          });
-
-          if (!response.ok) {
-              throw new Error('Ошибка при проверке сеансового токена');
-          }
-
-          const userData = await response.json();
-          console.log('Информация о пользователе:', userData);
-          // Теперь у вас есть информация о пользователе userData.username
-
-          // Получаем имя пользователя и сохраняем в переменной
-          const userDisplayName = userData.username;
-          console.log('Информация о пользователе:', userDisplayName)
-          // Отображаем имя пользователя на странице
-          const usernameElement = document.querySelector('.data_text #username');
-          usernameElement.textContent = userDisplayName;
-
-          // Проверяем роль пользователя
-          const userRole = userData.role;
-          if (userRole !== 'admin') {
-            const adminPanelLink = document.getElementById('admin-panel-link');
-            adminPanelLink.style.display = 'none'; // Скрываем кнопку "Admin Panel"
-          }
-      } catch (error) {
-          console.error('Произошла ошибка:', error.message);
-      }
-  } else {
-      console.log('Сеансовый токен отсутствует в sessionStorage');
-  }
-});
-
-
-document.addEventListener('DOMContentLoaded', async function() {
-  // Проверяем наличие сеансового токена в sessionStorage
-  const sessionToken = sessionStorage.getItem('sessionToken');
-  if (sessionToken) {
-      try {
-          const response = await fetch('http://127.0.0.1:3000/profile', {
-              headers: {
-                  'Authorization': `Bearer ${sessionToken}`
-              }
-          });
-
-          if (!response.ok) {
-              throw new Error('Ошибка при проверке сеансового токена');
-          }
-
-          const userData = await response.json();
-          const userRole = userData.role;
-
-          // Проверяем роль пользователя
-          if (userRole !== 'admin') {
-              const adminPanelLink = document.getElementById('admin-panel-link');
-              adminPanelLink.style.display = 'none'; // Скрываем кнопку "Admin Panel"
-          }
-
-      } catch (error) {
-          console.error('Произошла ошибка:', error.message);
-      }
-  } else {
-      console.log('Сеансовый токен отсутствует в sessionStorage');
-  }
-});
-
-
-
-document.addEventListener('DOMContentLoaded', async () => {
-  // Получаем элементы DOM
-  const categoryInput = document.getElementById('category-input');
-  const addCategoryBtn = document.getElementById('add-category-btn');
-  const categoryTable = document.getElementById('category-table');
-
-  // Функция для обновления таблицы с категориями
-  const updateCategoryTable = async () => {
-      try {
-          // Очищаем текущие данные в таблице
-          categoryTable.innerHTML = '';
-
-          // Запрос к серверу для получения списка категорий
-          const response = await fetch('http://127.0.0.1:3000/categories');
-          const categories = await response.json();
-
-          // Добавляем каждую категорию в таблицу
-          categories.forEach(category => {
-              const row = document.createElement('tr');
-              row.innerHTML = `<td>${category.category_id}</td><td>${category.category_name}</td><td><button class="delete-category-btn" data-id="${category.category_id}">Delete</button></td>`;
-              categoryTable.appendChild(row);
-          });
-
-          // Добавляем обработчики событий для кнопок удаления категорий
-          const deleteCategoryBtns = document.querySelectorAll('.delete-category-btn');
-          deleteCategoryBtns.forEach(btn => {
-              btn.addEventListener('click', async () => {
-                  const categoryId = btn.dataset.id;
-                  await deleteCategory(categoryId);
-                  await updateCategoryTable();
-              });
-          });
-      } catch (error) {
-          console.error('Ошибка при обновлении таблицы категорий:', error.message);
-      }
-  };
-
-  // Функция для добавления новой категории
-  const addCategory = async () => {
-      try {
-          const categoryName = categoryInput.value;
-          console.log("categoryName", categoryName);
-          if (!categoryName) return;
-
-          // Запрос к серверу для добавления категории
-          const response = await fetch('http://127.0.0.1:3000/categories/add', {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({ category_name: categoryName })
-          });
-
-          if (!response.ok) {
-              throw new Error('Ошибка при добавлении категории');
-          }
-
-          // Очищаем поле ввода после успешного добавления
-          categoryInput.value = '';
-
-          // Обновляем таблицу категорий
-          await updateCategoryTable();
-      } catch (error) {
-          console.error('Ошибка при добавлении категории:', error.message);
-      }
-  };
-
-  // Функция для удаления категории
-const deleteCategory = async (categoryId) => {
-  try {
-    console.log("delete category", categoryId)
-      // Отправляем запрос DELETE на сервер для удаления категории по ее ID
-      const response = await fetch(`http://127.0.0.1:3000/categories/delete/${categoryId}`, {
-          method: 'DELETE'
-      });
-
-      // Проверяем, был ли успешно удалена категория
-      if (response.ok) {
-          // Обновляем таблицу категорий
-          await updateCategoryTable(); // Предполагаемая функция обновления таблицы категорий
-          alert('Категория успешно удалена');
-      } else {
-          // Если возникла ошибка при удалении категории, выводим сообщение об ошибке
-          throw new Error('Ошибка при удалении категории');
-      }
-  } catch (error) {
-      console.error('Ошибка при удалении категории:', error.message);
-      alert('Ошибка при удалении категории: ' + error.message);
-  }
-};
-
-
-  // Добавляем обработчик события для кнопки добавления категории
-  addCategoryBtn.addEventListener('click', addCategory);
-
-  // Обновляем таблицу категорий при загрузке страницы
-  await updateCategoryTable();
-});
-
-
-document.addEventListener('DOMContentLoaded', async function() {
-  try {
-      // Отправляем запрос к серверу для получения списка существующих видео
-      const response = await fetch('http://127.0.0.1:3000/videos');
-      if (!response.ok) {
-          throw new Error('Failed to fetch videos');
-      }
-
-      // Получаем данные о существующих видео
-      const videoData = await response.json();
-      
-      // Отображаем данные о существующих видео в таблице
-      const videoTableBody = document.querySelector('#video-table tbody');
-      videoData.forEach(video => {
-          const row = document.createElement('tr');
-          row.innerHTML = `
-              <td>${video.video_id}</td>
-              <td>${video.video_name}</td>
-              <td>${video.video_description}</td>
-              <td>${video.video_time}</td>
-              <td>${video.video_num}</td>
-              <td>${video.video_material}</td>
-              <td>
-                  <button class="delete-video-btn" data-video-id="${video.video_id}">Delete</button>
-                  <button class="edit-video-btn" data-video-id="${video.video_id}">Edit</button>
-              </td>
-          `;
-          videoTableBody.appendChild(row);
-      });
-
-      // Добавляем обработчики событий для кнопок удаления и редактирования видео
-      document.querySelectorAll('.delete-video-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const videoId = btn.dataset.videoId; // Получаем идентификатор видео из data-атрибута кнопки
-            deleteVideo(videoId);
-        });
-    });
-    
-
-        const openEditPopup = (videoId) => {
-            const popup = document.getElementById('edit-video-modal');
-            const video = getVideoById(videoId); // Функция, которая получает данные о видео по его идентификатору
-
-                // Заполнение инпутов значениями из объекта video
-                document.getElementById('edit-video-name-input').value = video.video_name;
-                document.getElementById('edit-video-description-input').value = video.video_description;
-                document.getElementById('edit-video-material-input').value = video.video_material;
-                document.getElementById('edit-video-num-input').value = video.video_num;
-            // Здесь можно добавить логику заполнения формы в попапе данными о видео по его videoId
-            popup.style.display = 'block'; // Показываем попап
-        };
-    
-        
-        document.querySelectorAll('.edit-video-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const videoId = btn.dataset.videoId; // Получаем идентификатор видео из data-атрибута кнопки
-                openEditPopup(videoId); // Открываем попап для редактирования видео
+async function setupUserInfo() {
+    const sessionToken = sessionStorage.getItem('sessionToken');
+    if (sessionToken) {
+        try {
+            const response = await fetch('http://127.0.0.1:3000/aunt', {
+                headers: { 'Authorization': `Bearer ${sessionToken}` }
             });
-        });
+            if (!response.ok) throw new Error('Ошибка при проверке сеансового токена');
 
-  } catch (error) {
-      console.error('Error fetching videos:', error.message);
-  }
-});
+            const userData = await response.json();
+            document.querySelector('.data_text #username').textContent = userData.username;
 
-const closeEditPopup = () => {
-    const popup = document.getElementById('edit-video-modal');
-    popup.style.display = 'none'; // Скрываем попап
-};
-
-
-// Добавление видео в базу данных 
-const addVideo = async () => {
-  try {
-    const videoNameInput = document.getElementById('video-name-input');
-    const videoDescriptionInput = document.getElementById('video-description-input');
-    const videoMaterialInput = document.getElementById('video-material-input');
-    const videoNumInput = document.getElementById('video-num-input');
-
-      const videoName = videoNameInput.value;
-      const videoDescription = videoDescriptionInput.value;
-      const videoMaterial = videoMaterialInput.value;
-      const videoNum = videoNumInput.value;
-
-      // Проверка на заполненность всех полей
-      if (!videoName || !videoDescription || !videoMaterial || !videoNum) {
-          console.error('Please fill all fields');
-          return;
-      }
-
-      // Отправка запроса на сервер для добавления нового видео
-      const response = await fetch('http://127.0.0.1:3000/videos/add', {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ videoName, videoDescription, videoMaterial, videoNum })
-      });
-
-      if (!response.ok) {
-          throw new Error('Failed to add video');
-      }
-
-      // Очищаем поля ввода после успешного добавления
-      videoNameInput.value = '';
-      videoDescriptionInput.value = '';
-      videoMaterialInput.value = '';
-      videoNumInput.value = '';
-
-      // Обновляем таблицу видео
-      updateVideoTable();
-  } catch (error) {
-      console.error('Error adding video:', error.message);
-  }
-};
-
-const updateVideoTable = async () => {
-  try {
-      const response = await fetch('http://127.0.0.1:3000/videos');
-      if (!response.ok) {
-          throw new Error('Ошибка при получении видео');
-      }
-      const videos = await response.json();
-      
-      // Очищаем таблицу перед обновлением
-      const videoTableBody = document.querySelector('#video-table tbody');
-      videoTableBody.innerHTML = '';
-
-      // Создаем строки таблицы на основе полученных данных
-      videos.forEach(video => {
-          const row = document.createElement('tr');
-          row.innerHTML = `
-              <td>${video.video_id}</td>
-              <td>${video.video_name}</td>
-              <td>${video.video_description}</td>
-              <td>${video.video_time}</td>
-              <td>${video.video_num}</td>
-              <td>${video.video_material}</td>
-              <td>
-                  <button class="delete-video-btn" data-id="${video.video_id}">Delete</button>
-                  <button class="edit-video-btn" data-id="${video.video_id}">Edit</button>
-              </td>
-          `;
-          videoTableBody.appendChild(row);
-      });
-  } catch (error) {
-      console.error('Ошибка при обновлении таблицы видео:', error.message);
-  }
-};
-
-
-// Удаление видео из бд  
-
-const deleteVideo = async (videoId) => {
-  try {
-      console.log("videoId", videoId);
-      const response = await fetch(`http://127.0.0.1:3000/videos/delete/${videoId}`, {
-          method: 'DELETE',
-      });
-      if (!response.ok) {
-          throw new Error('Ошибка при удалении видео');
-      }
-      // После успешного удаления видео, обновляем таблицу
-      await updateVideoTable();
-
-      console.log('Видео успешно удалено');
-  } catch (error) {
-      console.error('Ошибка при удалении видео:', error.message);
-  }
-};
-
-// Function to handle editing a video
-const editVideo = async (videoId) => {
-    try {
-        // Fetch the video data to pre-fill the edit form
-        const response = await fetch(`http://127.0.0.1:3000/videos/${videoId}`);
-        if (!response.ok) {
-            throw new Error('Failed to fetch video data');
+            if (userData.role !== 'admin') {
+                document.getElementById('admin-panel-link').style.display = 'none';
+            }
+        } catch (error) {
+            console.error('Произошла ошибка:', error.message);
         }
-        const videoData = await response.json();
-
-        // Populate the edit form fields with the fetched data
-        document.getElementById('edit-video-name-input').value = videoData.video_name;
-        document.getElementById('edit-video-description-input').value = videoData.video_description;
-        document.getElementById('edit-video-time-input').value = videoData.video_time;
-        document.getElementById('edit-video-material-input').value = videoData.video_material;
-        document.getElementById('edit-video-num-input').value = videoData.video_num;
-
-        // Display the edit modal
-        // Your code to display the modal here
-    } catch (error) {
-        console.error('Error editing video:', error.message);
+    } else {
+        console.log('Сеансовый токен отсутствует в sessionStorage');
     }
-};
+}
 
-// Add event listener for Edit buttons
+function setupCategoryManagement() {
+    const categoryInput = document.getElementById('category-input');
+    const addCategoryBtn = document.getElementById('add-category-btn');
+    const categoryTable = document.getElementById('category-table');
 
+    const updateCategoryTable = async () => {
+        try {
+            categoryTable.innerHTML = '';
+            const response = await fetch('http://127.0.0.1:3000/categories');
+            const categories = await response.json();
 
+            categories.forEach(category => {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td>${category.category_id}</td><td>${category.category_name}</td><td><button class="delete-category-btn" data-id="${category.category_id}">Delete</button></td>`;
+                categoryTable.appendChild(row);
+            });
 
+            document.querySelectorAll('.delete-category-btn').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    await deleteCategory(btn.dataset.id);
+                });
+            });
+        } catch (error) {
+            console.error('Ошибка при обновлении таблицы категорий:', error.message);
+        }
+    };
 
+    const addCategory = async () => {
+        const categoryName = categoryInput.value;
+        if (!categoryName) return;
 
-// Получаем ссылку на кнопку "Add Video"
-const addVideoBtn = document.getElementById('add-video-btn');
+        try {
+            const response = await fetch('http://127.0.0.1:3000/categories/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ category_name: categoryName })
+            });
+            if (!response.ok) throw new Error('Ошибка при добавлении категории');
 
-// Добавляем обработчик события клика на кнопку "Add Video"
-addVideoBtn.addEventListener('click', addVideo);
+            categoryInput.value = '';
+            await updateCategoryTable();
+        } catch (error) {
+            console.error('Ошибка при добавлении категории:', error.message);
+        }
+    };
 
+    const deleteCategory = async (categoryId) => {
+        try {
+            const response = await fetch(`http://127.0.0.1:3000/categories/delete/${categoryId}`, { method: 'DELETE' });
+            if (!response.ok) throw new Error('Ошибка при удалении категории');
+            await updateCategoryTable();
+        } catch (error) {
+            console.error('Ошибка при удалении категории:', error.message);
+        }
+    };
 
+    addCategoryBtn.addEventListener('click', addCategory);
+    updateCategoryTable();
+}
+
+function setupVideoManagement() {
+    const addVideoBtn = document.getElementById('add-video-btn');
+    const videoTableBody = document.querySelector('#video-table tbody');
+    const editModal = document.getElementById('edit-video-modal');
+    const closeEditPopupBtn = document.querySelector('.close-video-edit');
+
+    const updateVideoTable = async () => {
+        try {
+            const response = await fetch('http://127.0.0.1:3000/videos');
+            if (!response.ok) throw new Error('Ошибка при получении видео');
+            const videos = await response.json();
+
+            videoTableBody.innerHTML = '';
+            videos.forEach(video => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${video.video_id}</td>
+                    <td>${video.video_name}</td>
+                    <td>${video.video_description}</td>
+                    <td>${video.video_time}</td>
+                    <td>${video.video_num}</td>
+                    <td>${video.video_material}</td>
+                    <td>
+                        <button class="delete-video-btn" data-id="${video.video_id}">Delete</button>
+                        <button class="edit-video-btn" data-id="${video.video_id}">Edit</button>
+                    </td>`;
+                videoTableBody.appendChild(row);
+            });
+
+            document.querySelectorAll('.delete-video-btn').forEach(btn => {
+                btn.addEventListener('click', () => deleteVideo(btn.dataset.id));
+            });
+
+            document.querySelectorAll('.edit-video-btn').forEach(btn => {
+                btn.addEventListener('click', () => openEditPopup(btn.dataset.id));
+            });
+        } catch (error) {
+            console.error('Ошибка при обновлении таблицы видео:', error.message);
+        }
+    };
+
+    const addVideo = async () => {
+        const videoName = document.getElementById('video-name-input').value;
+        const videoDescription = document.getElementById('video-description-input').value;
+        const videoMaterial = document.getElementById('video-material-input').value;
+        const videoNum = document.getElementById('video-num-input').value;
+
+        if (!videoName || !videoDescription || !videoMaterial || !videoNum) return;
+
+        try {
+            const response = await fetch('http://127.0.0.1:3000/videos/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ videoName, videoDescription, videoMaterial, videoNum })
+            });
+            if (!response.ok) throw new Error('Failed to add video');
+
+            document.getElementById('video-name-input').value = '';
+            document.getElementById('video-description-input').value = '';
+            document.getElementById('video-material-input').value = '';
+            document.getElementById('video-num-input').value = '';
+
+            await updateVideoTable();
+        } catch (error) {
+            console.error('Error adding video:', error.message);
+        }
+    };
+
+    const deleteVideo = async (videoId) => {
+        try {
+            const response = await fetch(`http://127.0.0.1:3000/videos/delete/${videoId}`, { method: 'DELETE' });
+            if (!response.ok) throw new Error('Ошибка при удалении видео');
+            await updateVideoTable();
+        } catch (error) {
+            console.error('Ошибка при удалении видео:', error.message);
+        }
+    };
+
+    const openEditPopup = async (videoId) => {
+        try {
+            const response = await fetch(`http://127.0.0.1:3000/videos/${videoId}`);
+            if (!response.ok) throw new Error('Failed to fetch video data');
+            const videoData = await response.json();
+
+            document.getElementById('edit-video-name-input').value = videoData.video_name;
+            document.getElementById('edit-video-description-input').value = videoData.video_description;
+            document.getElementById('edit-video-time-input').value = videoData.video_time;
+            document.getElementById('edit-video-material-input').value = videoData.video_material;
+            document.getElementById('edit-video-num-input').value = videoData.video_num;
+
+            editModal.style.display = 'block';
+        } catch (error) {
+            console.error('Error editing video:', error.message);
+        }
+    };
+
+    addVideoBtn.addEventListener('click', addVideo);
+    closeEditPopupBtn.addEventListener('click', () => {
+        editModal.style.display = 'none';
+    });
+    updateVideoTable();
+}
+
+function setupCourseManagement() {
+    const addCourseBtn = document.getElementById('add-course-btn');
+    const courseTableBody = document.querySelector('#course-table tbody');
+
+    const updateCourseTable = async () => {
+        try {
+            const response = await fetch('http://127.0.0.1:3000/courses');
+            if (!response.ok) throw new Error('Ошибка при получении курсов');
+            const courses = await response.json();
+
+            courseTableBody.innerHTML = '';
+            courses.forEach(course => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${course.course_id}</td>
+                    <td>${course.course_name}</td>
+                    <td>${course.description}</td>
+                    <td>${course.category_id}</td>
+                    <td>${course.release_date}</td>
+                    <td><img src="${course.course_pic}" alt="${course.course_name}"></td>
+                    <td>
+                        <button class="delete-course-btn" data-id="${course.course_id}">Delete</button>
+                        <button class="edit-course-btn" data-id="${course.course_id}">Edit</button>
+                    </td>`;
+                courseTableBody.appendChild(row);
+            });
+
+            document.querySelectorAll('.delete-course-btn').forEach(btn => {
+                btn.addEventListener('click', () => deleteCourse(btn.dataset.id));
+            });
+
+            document.querySelectorAll('.edit-course-btn').forEach(btn => {
+                btn.addEventListener('click', () => openEditCoursePopup(btn.dataset.id));
+            });
+        } catch (error) {
+            console.error('Ошибка при обновлении таблицы курсов:', error.message);
+        }
+    };
+
+    const addCourse = async () => {
+        const courseName = document.getElementById('course-name-input').value;
+        const courseDescription = document.getElementById('course-description-input').value;
+        const courseCategoryId = document.getElementById('course-category-id-input').value;
+        const courseReleaseDate = document.getElementById('course-release-date-input').value;
+        const coursePic = document.getElementById('course-pic-input').value;
+
+        if (!courseName || !courseDescription || !courseCategoryId || !courseReleaseDate || !coursePic) return;
+
+        try {
+            const response = await fetch('http://127.0.0.1:3000/courses/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ courseName, courseDescription, courseCategoryId, courseReleaseDate, coursePic })
+            });
+            if (!response.ok) throw new Error('Failed to add course');
+
+            document.getElementById('course-name-input').value = '';
+            document.getElementById('course-description-input').value = '';
+            document.getElementById('course-category-id-input').value = '';
+            document.getElementById('course-release-date-input').value = '';
+            document.getElementById('course-pic-input').value = '';
+
+            await updateCourseTable();
+        } catch (error) {
+            console.error('Error adding course:', error.message);
+        }
+    };
+
+    const deleteCourse = async (courseId) => {
+        try {
+            const response = await fetch(`http://127.0.0.1:3000/courses/delete/${courseId}`, { method: 'DELETE' });
+            if (!response.ok) throw new Error('Ошибка при удалении курса');
+            await updateCourseTable();
+        } catch (error) {
+            console.error('Ошибка при удалении курса:', error.message);
+        }
+    };
+
+    const openEditCoursePopup = async (courseId) => {
+        try {
+            const response = await fetch(`http://127.0.0.1:3000/courses/${courseId}`);
+            if (!response.ok) throw new Error('Failed to fetch course data');
+            const courseData = await response.json();
+
+            document.getElementById('edit-course-name-input').value = courseData.course_name;
+            document.getElementById('edit-course-description-input').value = courseData.description;
+            document.getElementById('edit-course-category-id-input').value = courseData.category_id;
+            document.getElementById('edit-course-release-date-input').value = courseData.release_date;
+            document.getElementById('edit-course-pic-input').value = courseData.course_pic;
+
+            document.getElementById('edit-course-modal').style.display = 'block';
+        } catch (error) {
+            console.error('Error editing course:', error.message);
+        }
+    };
+
+    addCourseBtn.addEventListener('click', addCourse);
+    updateCourseTable();
+}
+
+function setupCaseManagement() {
+    const addCaseBtn = document.getElementById('add-case-btn');
+    const caseTableBody = document.querySelector('#case-table tbody');
+
+    const updateCaseTable = async () => {
+        try {
+            const response = await fetch('http://127.0.0.1:3000/cases');
+            if (!response.ok) throw new Error('Ошибка при получении кейсов');
+            const cases = await response.json();
+
+            caseTableBody.innerHTML = '';
+            cases.forEach(caseItem => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${caseItem.case_id}</td>
+                    <td>${caseItem.video_num}</td>
+                    <td>${caseItem.course_id}</td>
+                    <td>
+                        <button class="delete-case-btn" data-id="${caseItem.case_id}">Delete</button>
+                    </td>`;
+                caseTableBody.appendChild(row);
+            });
+
+            document.querySelectorAll('.delete-case-btn').forEach(btn => {
+                btn.addEventListener('click', () => deleteCase(btn.dataset.id));
+            });
+        } catch (error) {
+            console.error('Ошибка при обновлении таблицы кейсов:', error.message);
+        }
+    };
+
+    const addCase = async () => {
+        const videoNum = document.getElementById('case-video-num-input').value;
+        const courseId = document.getElementById('case-course-id-input').value;
+
+        if (!videoNum || !courseId) return;
+
+        try {
+            const response = await fetch('http://127.0.0.1:3000/cases/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ videoNum, courseId })
+            });
+            if (!response.ok) throw new Error('Failed to add case');
+
+            document.getElementById('case-video-num-input').value = '';
+            document.getElementById('case-course-id-input').value = '';
+
+            await updateCaseTable();
+        } catch (error) {
+            console.error('Error adding case:', error.message);
+        }
+    };
+
+    const deleteCase = async (caseId) => {
+        try {
+            const response = await fetch(`http://127.0.0.1:3000/cases/delete/${caseId}`, { method: 'DELETE' });
+            if (!response.ok) throw new Error('Ошибка при удалении кейса');
+            await updateCaseTable();
+        } catch (error) {
+            console.error('Ошибка при удалении кейса:', error.message);
+        }
+    };
+
+    addCaseBtn.addEventListener('click', addCase);
+    updateCaseTable();
+}

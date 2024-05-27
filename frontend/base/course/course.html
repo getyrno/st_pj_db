@@ -1,0 +1,111 @@
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>courses</title>
+      <link rel="stylesheet" href="course.css">
+      <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+  </head>
+  <body>
+    <nav class="sidebar locked">
+      <div class="logo_items flex">
+          <span class="nav_image">
+              <img src="../images/logo.jpg" alt="logo_img" />
+          </span>
+          <span class="logo_name">Course.io</span>
+          <i class="bx bx-lock-alt" id="lock-icon" title="Unlock Sidebar"></i>
+          <i class="bx bx-x" id="sidebar-close"></i>
+      </div>
+      <div class="menu_container">
+          <div class="menu_items">
+              <ul class="menu_item">
+                  <div class="menu_title flex">
+                      <span class="title">Dashboard</span>
+                      <span class="line"></span>
+                  </div>
+                  <li class="item">
+                      <a href="../main.html" class="link flex">
+                          <i class="bx bx-home-alt"></i>
+                          <span>Main</span>
+                      </a>
+                  </li>
+                  <li class="item">
+                      <a href="../course/course.html" class="link flex">
+                          <i class="bx bx-grid-alt"></i>
+                          <span>All Courses</span>
+                      </a>
+                  </li>
+              </ul>
+              <ul class="menu_item">
+                  <div class="menu_title flex">
+                      <span class="title">Editor</span>
+                      <span class="line"></span>
+                  </div>
+                  <li class="item">
+                      <a href="../subscription-page/subscription-page.html" class="link flex">
+                          <i class="bx bxs-magic-wand"></i>
+                          <span>Subscription</span>
+                      </a>
+                  </li>
+                  <li class="item">
+                      <a href="../history-page/history-page.html" class="link flex">
+                          <i class="bx bx-folder"></i>
+                          <span>History</span>
+                      </a>
+                  </li>
+                  <li class="item">
+                      <a href="../admin-panel-page/admin-panel-page.html" class="link flex" id="admin-panel-link">
+                          <i class="bx bx-cloud-upload"></i>
+                          <span>Admin Panel</span>
+                      </a>
+                  </li>
+              </ul>
+              <ul class="menu_item">
+                  <div class="menu_title flex">
+                      <span class="title">Setting</span>
+                      <span class="line"></span>
+                  </div>
+                  <li class="item">
+                    <a href="../profile/profile.html" class="link flex">
+                      <i class="bx bx-cog"></i>
+                      <span>Profile</span>
+                    </a>
+                  </li>
+              </ul>
+          </div>
+          <div class="sidebar_profile flex" id="user-info">
+              <span class="nav_image">
+                  <img src="../../materials/user_pic2.png" alt="User Icon" id="userIcon">
+              </span>
+              <div class="data_text" style="color:black">
+                  <div id="username"></div>
+              </div>
+          </div>
+      </div>
+  </nav>
+
+  <div class="page-container">
+    <div class="main-content">
+      <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search courses..." class="search-input" style="height:50px; width: 700px; font-size: 20px; border-radius: 8px;">
+      </div>
+      <div class="courses">
+        <h3>Courses</h3>
+        <div id="coursesContainer" class="courses-container">
+          <!-- Courses will be populated here -->
+        </div>
+      </div>
+    </div>
+    <div class="categories">
+      <h3>Categories</h3>
+      <table id="categoriesTable">
+        <!-- Categories will be populated here -->
+      </table>
+    </div>
+  </div>
+
+
+    <script src="course.js"></script>
+  </body>
+  </html>

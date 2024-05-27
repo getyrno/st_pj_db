@@ -1,241 +1,194 @@
-// Selecting the sidebar and buttons
-const sidebar = document.querySelector(".sidebar");
-const sidebarOpenBtn = document.querySelector("#sidebar-open");
-const sidebarCloseBtn = document.querySelector("#sidebar-close");
-const sidebarLockBtn = document.querySelector("#lock-icon");
+document.addEventListener('DOMContentLoaded', async () => {
+    const sessionToken = sessionStorage.getItem('sessionToken');
+    console.log('sessionToken =>', sessionToken);
 
-// Function to toggle the lock state of the sidebar
-const toggleLock = () => {
-  sidebar.classList.toggle("locked");
-  // If the sidebar is not locked
-  if (!sidebar.classList.contains("locked")) {
-    sidebar.classList.add("hoverable");
-    sidebarLockBtn.classList.replace("bx-lock-alt", "bx-lock-open-alt");
-  } else {
-    sidebar.classList.remove("hoverable");
-    sidebarLockBtn.classList.replace("bx-lock-open-alt", "bx-lock-alt");
-  }
-};
+    if (sessionToken) {
+        await fetchUserData(sessionToken);
+        await fetchProfileData(sessionToken);
+        await checkAdminRole(sessionToken);
+    } else {
+        console.log('Сеансовый токен отсутствует в sessionStorage');
+    }
 
-// Function to hide the sidebar when the mouse leaves
-const hideSidebar = () => {
-  if (sidebar.classList.contains("hoverable")) {
-    sidebar.classList.add("close");
-  }
-};
+    setupSidebar();
+});
 
-// Function to show the sidebar when the mouse enter
-const showSidebar = () => {
-  if (sidebar.classList.contains("hoverable")) {
-    sidebar.classList.remove("close");
-  }
-};
+async function fetchUserData(token) {
+    try {
+        const response = await fetch('http://127.0.0.1:3000/aunt', {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
 
-// Function to show and hide the sidebar
-const toggleSidebar = () => {
-  sidebar.classList.toggle("close");
-};
+        if (!response.ok) throw new Error('Ошибка при проверке сеансового токена');
 
-// If the window width is less than 800px, close the sidebar and remove hoverability and lock
-if (window.innerWidth < 800) {
-  sidebar.classList.add("close");
-  sidebar.classList.remove("locked");
-  sidebar.classList.remove("hoverable");
+        const userData = await response.json();
+        console.log('Информация о пользователе:', userData);
+
+        const usernameElement = document.querySelector('.data_text #username');
+        usernameElement.textContent = userData.username;
+    } catch (error) {
+        console.error('Произошла ошибка:', error.message);
+    }
 }
 
-// Adding event listeners to buttons and sidebar for the corresponding actions
-sidebarLockBtn.addEventListener("click", toggleLock);
-sidebar.addEventListener("mouseleave", hideSidebar);
-sidebar.addEventListener("mouseenter", showSidebar);
-sidebarCloseBtn.addEventListener("click", toggleSidebar);
+async function fetchProfileData(token) {
+    try {
+        const response = await fetch('http://127.0.0.1:3000/profile', {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
 
-document.addEventListener('DOMContentLoaded', async function() {
-  const sessionToken = sessionStorage.getItem('sessionToken');
-  console.log('sessionToken =>', sessionToken);
-  
-  if (sessionToken) {
-      try {
-          const response = await fetch('http://127.0.0.1:3000/profile', {
-              headers: {
-                  'Authorization': `Bearer ${sessionToken}`
-              }
-          });
-  
-          if (!response.ok) {
-              throw new Error('Ошибка при проверке сеансового токена');
-          }
-  
-          const userData = await response.json();
-          const userInfoElement = document.getElementById('userInfo');
-          
-          // Создаем таблицу для отображения информации о пользователе
-          let tableHTML = '<table>';
-          for (const key in userData) {
-              let label = '';
-              switch (key) {
-                  case 'subscription_name':
-                      label = 'Subscription';
-                      break;
-                  case 'subscription_buytime':
-                      label = 'Subscription buy time - ';
-                      break;
-                  case 'subscription_endtime':
-                      label = 'Subscription end time - ';
-                      break;
-                  case 'user_name':
-                      label = 'Username';
-                      break;
-                  case 'user_email':
-                      label = 'User Email';
-                      break;
-                  case 'user_password':
-                      label = 'Password';
-                      break;
-                  default:
-                      label = key;
-              }
-              if (key !== 'user_password') {
-                  tableHTML += `<tr><td>${label}</td><td>${userData[key]}</td></tr>`;
-              } else {
-                  tableHTML += `<tr><td>${label}</td><td><span class="password hidden">******</span><button class="show-password">Показать</button></td></tr>`;
-              }
-          }
-          tableHTML += '</table>';
-          
-          userInfoElement.innerHTML = tableHTML;
-  
-          // Добавляем обработчики для кнопок показа пароля
-          const showPasswordButtons = document.querySelectorAll('.show-password');
-          showPasswordButtons.forEach(button => {
-              button.addEventListener('click', () => {
-                  const passwordSpan = button.previousElementSibling;
-                  if (passwordSpan.classList.contains('hidden')) {
-                      passwordSpan.textContent = userData['user_password'];
-                      passwordSpan.classList.remove('hidden');
-                      button.textContent = 'Скрыть';
-                  } else {
-                      passwordSpan.textContent = '******';
-                      passwordSpan.classList.add('hidden');
-                      button.textContent = 'Показать';
-                  }
-              });
-          });
-          const userRole = userData.role;
-          if (userRole !== 'admin') {
-            const adminPanelLink = document.getElementById('admin-panel-link');
-            adminPanelLink.style.display = 'none'; // Скрываем кнопку "Admin Panel"
-          }
-      } catch (error) {
-          console.error('Произошла ошибка:', error.message);
-      }
-  } else {
-      console.log('Сеансовый токен отсутствует в sessionStorage');
-  }
-});
+        if (!response.ok) throw new Error('Ошибка при проверке сеансового токена');
+
+        const userData = await response.json();
+        const userInfoElement = document.getElementById('userInfo');
+        let tableHTML = '<table>';
+
+        for (const key in userData) {
+            if (shouldDisplayField(key)) {
+                let label = getLabel(key);
+                let value = userData[key];
+                if (isDateField(key)) {
+                    value = formatDate(value);
+                }
+                tableHTML += `<tr><td style="padding-right:10px">${label}</td><td>${value}</td></tr>`;
+            }
+        }
+
+        tableHTML += '</table>';
+        userInfoElement.innerHTML = tableHTML;
+    } catch (error) {
+        console.error('Произошла ошибка:', error.message);
+    }
+}
+
+function shouldDisplayField(key) {
+    const excludedFields = ['session_id', 'user_id', 'session_token', 'created_at', 'updated_at', 'user_password', 'role'];
+    return !excludedFields.includes(key);
+}
+
+function getLabel(key) {
+    const labels = {
+        subscription_name: 'Subscription',
+        subscription_buytime: 'Subscription buy time',
+        subscription_endtime: 'Subscription end time',
+        user_name: 'Username',
+        user_email: 'User Email'
+    };
+    return labels[key] || key;
+}
+
+function isDateField(key) {
+    return key.endsWith('time');
+}
+
+function formatDate(dateString) {
+    const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+    return new Date(dateString).toLocaleDateString('ru-RU', options);
+}
+
+function setupSidebar() {
+    const sidebar = document.querySelector(".sidebar");
+    const sidebarLockBtn = document.querySelector("#lock-icon");
+    const sidebarCloseBtn = document.querySelector("#sidebar-close");
+
+    const toggleLock = () => {
+        sidebar.classList.toggle("locked");
+        if (!sidebar.classList.contains("locked")) {
+            sidebar.classList.add("hoverable");
+            sidebarLockBtn.classList.replace("bx-lock-alt", "bx-lock-open-alt");
+        } else {
+            sidebar.classList.remove("hoverable");
+            sidebarLockBtn.classList.replace("bx-lock-open-alt", "bx-lock-alt");
+        }
+    };
+
+    const hideSidebar = () => {
+        if (sidebar.classList.contains("hoverable")) {
+            sidebar.classList.add("close");
+        }
+    };
+
+    const showSidebar = () => {
+        if (sidebar.classList.contains("hoverable")) {
+            sidebar.classList.remove("close");
+        }
+    };
+
+    const toggleSidebar = () => {
+        sidebar.classList.toggle("close");
+    };
+
+    if (window.innerWidth < 800) {
+        sidebar.classList.add("close");
+        sidebar.classList.remove("locked");
+        sidebar.classList.remove("hoverable");
+    }
+
+    sidebarLockBtn.addEventListener("click", toggleLock);
+    sidebar.addEventListener("mouseleave", hideSidebar);
+    sidebar.addEventListener("mouseenter", showSidebar);
+    sidebarCloseBtn.addEventListener("click", toggleSidebar);
+}
 
 function goBack() {
-  window.history.back();
+    window.history.back();
 }
-
-
 
 async function logout() {
-  const sessionToken = sessionStorage.getItem('sessionToken');
-  if (!sessionToken) {
-      console.log('Сеансовый токен отсутствует в sessionStorage');
-      return;
-  }
+    const sessionToken = sessionStorage.getItem('sessionToken');
+    if (!sessionToken) {
+        console.log('Сеансовый токен отсутствует в sessionStorage');
+        return;
+    }
 
-  try {
-      // Отправляем запрос на сервер для завершения текущей сессии
-      const response = await fetch('http://127.0.0.1:3000/logout', {
-          method: 'POST',
-          headers: {
-              'Authorization': `Bearer ${sessionToken}`
-          }
-      });
+    try {
+        const response = await fetch('http://127.0.0.1:3000/logout', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${sessionToken}`
+            }
+        });
 
-      if (!response.ok) {
-          throw new Error('Ошибка при выходе из сессии');
-      }
+        if (!response.ok) {
+            throw new Error('Ошибка при выходе из сессии');
+        }
 
-      // Удаляем сеансовый токен из sessionStorage
-      sessionStorage.removeItem('sessionToken');
-
-      // Перенаправляем пользователя на страницу входа
-      window.location.href = '../../index.html';
-
-  } catch (error) {
-      console.error('Произошла ошибка при выходе из сессии:', error.message);
-  }
+        sessionStorage.removeItem('sessionToken');
+        window.location.href = '../../index.html';
+    } catch (error) {
+        console.error('Произошла ошибка при выходе из сессии:', error.message);
+    }
 }
 
-
 document.addEventListener('DOMContentLoaded', async function() {
-  // Проверяем наличие сеансового токена в sessionStorage
-  const sessionToken = sessionStorage.getItem('sessionToken');
-  console.log('sessionToken =>', sessionToken)
-  if (sessionToken) {
-      // Отправляем запрос на сервер для проверки валидности сеансового токена
-      try {
-          const response = await fetch('http://127.0.0.1:3000/aunt', {
-              headers: {
-                  'Authorization': `Bearer ${sessionToken}`
-              }
-          });
-
-          if (!response.ok) {
-              throw new Error('Ошибка при проверке сеансового токена');
-          }
-
-          const userData = await response.json();
-          console.log('Информация о пользователе:', userData);
-          // Теперь у вас есть информация о пользователе userData.username
-
-          // Получаем имя пользователя и сохраняем в переменной
-          const userDisplayName = userData.username;
-          console.log('Информация о пользователе:', userDisplayName)
-          // Отображаем имя пользователя на странице
-          const usernameElement = document.querySelector('.data_text #username');
-          usernameElement.textContent = userDisplayName;
-
-          // Добавляем обработчик событий для клика на иконку пользователя и никнейм
-      } catch (error) {
-          console.error('Произошла ошибка:', error.message);
-      }
-  } else {
-      console.log('Сеансовый токен отсутствует в sessionStorage');
-  }
-});
-
-document.addEventListener('DOMContentLoaded', async function() {
-  // Проверяем наличие сеансового токена в sessionStorage
-  const sessionToken = sessionStorage.getItem('sessionToken');
-  if (sessionToken) {
-      try {
-          const response = await fetch('http://127.0.0.1:3000/profile', {
-              headers: {
-                  'Authorization': `Bearer ${sessionToken}`
-              }
-          });
-
-          if (!response.ok) {
-              throw new Error('Ошибка при проверке сеансового токена');
-          }
-
-          const userData = await response.json();
-          const userRole = userData.role;
-
-          // Проверяем роль пользователя
-          if (userRole !== 'admin') {
-              const adminPanelLink = document.getElementById('admin-panel-link');
-              adminPanelLink.style.display = 'none'; // Скрываем кнопку "Admin Panel"
-          }
-
-      } catch (error) {
-          console.error('Произошла ошибка:', error.message);
-      }
-  } else {
-      console.log('Сеансовый токен отсутствует в sessionStorage');
-  }
-});
+    // Проверяем наличие сеансового токена в sessionStorage
+    const sessionToken = sessionStorage.getItem('sessionToken');
+    if (sessionToken) {
+        try {
+            const response = await fetch('http://127.0.0.1:3000/profile', {
+                headers: {
+                    'Authorization': `Bearer ${sessionToken}`
+                }
+            });
+  
+            if (!response.ok) {
+                throw new Error('Ошибка при проверке сеансового токена');
+            }
+  
+            const userData = await response.json();
+            const userRole = userData.role;
+  
+            // Проверяем роль пользователя
+            if (userRole !== 'admin') {
+                const adminPanelLink = document.getElementById('admin-panel-link');
+                adminPanelLink.style.display = 'none'; // Скрываем кнопку "Admin Panel"
+            }
+  
+        } catch (error) {
+            console.error('Произошла ошибка:', error.message);
+        }
+    } else {
+        console.log('Сеансовый токен отсутствует в sessionStorage');
+    }
+  });
+  

@@ -105,7 +105,9 @@ document.addEventListener('DOMContentLoaded', async function() {
           }
 
           const userData = await response.json();
+
           const userRole = userData.role;
+          console.log(userData);
 
           // Проверяем роль пользователя
           if (userRole !== 'admin') {
@@ -118,5 +120,69 @@ document.addEventListener('DOMContentLoaded', async function() {
       }
   } else {
       console.log('Сеансовый токен отсутствует в sessionStorage');
+  }
+});
+
+
+document.addEventListener('DOMContentLoaded', async () => {
+  const sessionToken = sessionStorage.getItem('sessionToken');
+  if (!sessionToken) {
+    console.log('Session token is missing in sessionStorage');
+    return;
+  }
+
+  // Получаем информацию о пользователе и отображаем имя пользователя
+  try {
+    const response = await fetch('http://127.0.0.1:3000/profile', {
+              headers: {
+                  'Authorization': `Bearer ${sessionToken}`
+              }
+          });
+
+          if (!response.ok) {
+              throw new Error('Ошибка при проверке сеансового токена');
+          }
+
+          const userData = await response.json();
+          console.log(userData);
+          console.log(userData);
+          const userDisplayName = userData.username;
+          const userId = userData.user_id;
+
+    document.querySelector('.data_text #username').textContent = userDisplayName;
+
+    // Получаем историю пользователя
+    const historyResponse = await fetch(`http://127.0.0.1:3000/history/${userId}`, {
+      headers: {
+        'Authorization': `Bearer ${sessionToken}`
+      }
+    });
+
+    if (!historyResponse.ok) {
+      throw new Error('Ошибка при получении истории пользователя');
+    }
+
+    const historyData = await historyResponse.json();
+    const historyContainer = document.getElementById('history-container');
+    historyContainer.innerHTML = '';
+
+    if (historyData.length === 0) {
+      historyContainer.innerHTML = '<p>No history available.</p>';
+    } else {
+      historyData.forEach(item => {
+        const historyItem = document.createElement('div');
+        historyItem.className = 'history-item';
+        historyItem.innerHTML = `
+          <h3>${item.video_name}</h3>
+          <p>${item.video_description}</p>
+          <p><strong>Course:</strong> ${item.course_name}</p>
+          <p><strong>Watched on:</strong> ${new Date(item.watch_date).toLocaleString()}</p>
+        `;
+        historyContainer.appendChild(historyItem);
+      });
+    }
+  } catch (error) {
+    console.error('Произошла ошибка:', error.message);
+    document.getElementById('history-container').innerHTML = '<p>An error occurred while fetching user history.</p>';
   }
 });

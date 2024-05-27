@@ -1,18 +1,15 @@
 <!DOCTYPE html>
-<!-- Coding by CodingNepal || www.codingnepalweb.com -->
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="main.css">
-    <link flex href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Main Page</title>
+  <link rel="stylesheet" href="main.css">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
 </head>
 <body>
-    <div>
-        
-    </div>
-    <div>
-        <nav class="sidebar locked">
+  <div>
+    <nav class="sidebar locked">
       <div class="logo_items flex">
         <span class="nav_image">
           <img src="images/logo.jpg" alt="logo_img" />
@@ -21,7 +18,6 @@
         <i class="bx bx-lock-alt" id="lock-icon" title="Unlock Sidebar"></i>
         <i class="bx bx-x" id="sidebar-close"></i>
       </div>
-
       <div class="menu_container">
         <div class="menu_items">
           <ul class="menu_item">
@@ -36,71 +32,92 @@
               </a>
             </li>
             <li class="item">
-              <a href="#" class="link flex">
+              <a href="course/course.html" class="link flex">
                 <i class="bx bx-grid-alt"></i>
                 <span>All Courses</span>
               </a>
             </li>
           </ul>
-
           <ul class="menu_item">
             <div class="menu_title flex">
               <span class="title">Editor</span>
               <span class="line"></span>
             </div>
             <li class="item">
-              <a href="subscription-page\subscription-page.html" class="link flex">
+              <a href="subscription-page/subscription-page.html" class="link flex">
                 <i class="bx bxs-magic-wand"></i>
                 <span>Subscription</span>
               </a>
             </li>
             <li class="item">
-              <a href="#" class="link flex">
+              <a href="history-page/history-page.html" class="link flex">
                 <i class="bx bx-folder"></i>
                 <span>History</span>
               </a>
             </li>
             <li class="item">
-                <a href="admin-panel-page\admin-panel-page.html" class="link flex" id="admin-panel-link">
-                    <i class="bx bx-cloud-upload"></i>
-                    <span>Admin Panel</span>
-                </a>
-            </li>            
+              <a href="admin-panel-page/admin-panel-page.html" class="link flex" id="admin-panel-link">
+                <i class="bx bx-cloud-upload"></i>
+                <span>Admin Panel</span>
+              </a>
+            </li>
           </ul>
-
           <ul class="menu_item">
             <div class="menu_title flex">
               <span class="title">Setting</span>
               <span class="line"></span>
             </div>
             <li class="item">
-              <a href="#" class="link flex">
-                <i class="bx bx-flag"></i>
-                <span>Notice Board</span>
+              <a href="profile/profile.html" class="link flex">
+                <i class="bx bx-cog"></i>
+                <span>Profile</span>
               </a>
             </li>
-            <li class="item">
-                <a href="profile\profile.html" class="link flex">
-                  <i class="bx bx-cog"></i>
-                  <span>Setting</span>
-                </a>
-            </li>              
           </ul>
         </div>
-
         <div class="sidebar_profile flex" id="user-info">
-            <span class="nav_image">
-                <img src="../materials/user_pic2.png" alt="User Icon" id="userIcon">
-            </span>
+          <span class="nav_image">
+            <img src="../materials/user_pic2.png" alt="User Icon" id="userIcon">
+          </span>
           <div class="data_text" style="color:black">
             <div id="username"></div>
           </div>
         </div>
       </div>
     </nav>
-</div>
+  </div>
 
-  </body>
+  <div class="page-container">
+    <div class="main-content">
+      <h1>Welcome to Course.io!</h1>
+      <p>On this website, you can find a wide variety of IT-related educational courses. Whether you are a beginner looking to learn the basics or an advanced learner seeking to enhance your skills, we have courses that cater to all levels.</p>
+
+      <h2>About Our Project</h2>
+      <p>Course.io is your one-stop destination for IT education. Our goal is to provide high-quality courses that are accessible to everyone. We offer a diverse range of topics including web development, data science, programming languages, and more. Our platform is designed to help you learn at your own pace with content from industry experts.</p>
+
+      <h2>Site Navigation</h2>
+      <p>Here’s a brief overview of each section of our website:</p>
+
+      <h3>Main Page</h3>
+      <p>The Main Page is your starting point. Here, you can find general information about our platform and browse through featured courses. Use the search bar to quickly find specific courses that match your interests.</p>
+
+      <h3>All Courses</h3>
+      <p>The All Courses page provides a comprehensive list of all the courses available on our platform. You can filter courses by category, popularity, and difficulty level to find the perfect match for your learning needs.</p>
+
+      <h3>Subscription Page</h3>
+      <p>On the Subscription Page, you can learn about our subscription plans and choose the one that best fits your needs. Subscribing gives you unlimited access to all our courses and additional resources.</p>
+
+      <h3>History Page</h3>
+      <p>The History Page allows you to keep track of the courses you have enrolled in and completed. It helps you monitor your learning progress and revisit courses as needed.</p>
+
+      <h3>Profile Page</h3>
+      <p>Your Profile Page is where you can view and edit your personal information, subscription details, and course history. Customize your learning experience and keep your profile up to date.</p>
+
+      <div class="search-container">
+        <button id="searchButton" class="search-button" (click)="">Search</button>
+      </div>
+    </div>
+
   <script src="main.js"></script>
-
+</body>
 </html>
